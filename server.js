@@ -15,20 +15,14 @@ app.use(BodyPharser.json())
 // parse application/x-www-form-urlencoded
 app.use(BodyPharser.urlencoded({ extended: true }))
 
-// simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to the API" })
-})
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
-})
+
+
 
 /*** @Production Code
-const db = require("./app/models");
-db.sequelize.sync();
-*/
+ const db = require("./app/models");
+ db.sequelize.sync();
+ */
 
 /** @Development Code
  *
@@ -58,3 +52,22 @@ function initial() {
     name: "admin"
   });
 }
+
+
+
+
+// simple route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to the API" })
+})
+
+// routes
+require('./app/routes/auth.routes')(app);
+require('./app/routes/user.routes')(app);
+
+// set port, listen for requests
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`)
+})
+
