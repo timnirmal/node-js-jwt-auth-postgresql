@@ -25,3 +25,36 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
 })
 
+/*** @Production Code
+const db = require("./app/models");
+db.sequelize.sync();
+*/
+
+/** @Development Code
+ *
+ */
+const db = require("./app/models");
+const Role = db.role;
+db.sequelize.sync({ force: true }).then(() => {
+  console.log("Drop and Resync with { force: true }");
+  //process.exit(0);
+  initial();
+});
+
+// Set these in database everytime you run the server
+function initial() {
+  Role.create({
+    id: 1,
+    name: "user"
+  });
+
+  Role.create({
+    id: 2,
+    name: "moderator"
+  });
+
+  Role.create({
+    id: 3,
+    name: "admin"
+  });
+}
