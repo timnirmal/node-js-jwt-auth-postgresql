@@ -1,23 +1,21 @@
-const express = require("express")
-const BodyPharser = require("body-parser")
-const cors = require("cors")
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-const app = express()
+const app = express();
 
 var corsOptions = {
   origin: "http://localhost:8081",
   optionsSuccessStatus: 200
 }
 
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
+
 // parse requests of content-type - application/json
-app.use(BodyPharser.json())
-// parse application/x-www-form-urlencoded
-app.use(BodyPharser.urlencoded({ extended: true }))
+app.use(bodyParser.json());
 
-
-
-
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
 
 /*** @Production Code
  const db = require("./app/models");
@@ -29,10 +27,28 @@ app.use(BodyPharser.urlencoded({ extended: true }))
  */
 const db = require("./app/models");
 const Role = db.role;
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and Resync with { force: true }");
-  //process.exit(0);
+
+// db.sequelize.sync();
+// force: true will drop the table if it already exists
+db.sequelize.sync({force: true}).then(() => {
+  console.log('Drop and Resync Database with { force: true }');
   initial();
+});
+
+
+// simple route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to the API" })
+})
+
+// routes
+require('./app/routes/auth.routes')(app);
+require('./app/routes/user.routes')(app);
+
+// set port, listen for requests
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
 });
 
 // Set these in database everytime you run the server
@@ -56,18 +72,4 @@ function initial() {
 
 
 
-// simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to the API" })
-})
-
-// routes
-require('./app/routes/auth.routes')(app);
-require('./app/routes/user.routes')(app);
-
-// set port, listen for requests
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
-})
 
