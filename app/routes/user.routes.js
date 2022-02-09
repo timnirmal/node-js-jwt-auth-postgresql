@@ -4,7 +4,7 @@
 //      GET /api/test/mod for moderator
 //      GET /api/test/admin for admin
 
-const { authJwt } = require("../middleware/authJwt");
+const { authJwt } = require("../middleware");
 const controller = require("../controllers/user.controller");
 
 module.exports = function(app) {
