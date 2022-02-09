@@ -5,10 +5,18 @@ const cors = require("cors");
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8080"
+  origin: "http://localhost:8081"
 };
 
-app.use(cors(corsOptions));
+/*
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+*/
+
+app.use(cors());
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
@@ -19,6 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // database
 const db = require("./app/models");
 const Role = db.role;
+const User = db.user;
 
 // db.sequelize.sync();
 // force: true will drop the table if it already exists
@@ -29,7 +38,7 @@ db.sequelize.sync({force: true}).then(() => {
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+  res.json({ message: "Welcome to application." });
 });
 
 // routes
@@ -57,4 +66,21 @@ function initial() {
     id: 3,
     name: "admin"
   });
+
+  /*
+  User.create({
+    "username": "UserName",
+      "email": "email@address.com",
+      "password" : "password",
+      "role" : ["user","admin"]
+  })
+
+{
+    "username": "UserName",
+    "email": "email@address.com",
+    "password" : "password",
+    "role" : ["user","admin"]
+}
+
+  */
 }
